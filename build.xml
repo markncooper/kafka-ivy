@@ -1,0 +1,58 @@
+<project name="build"
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <property name="ivy.dir" location="ivy"/>
+  <property name="ivy.dep.file" location="ivy.xml"/>
+  <property name="ivy.version" value="2.3.0"/>
+
+  <property name="lib.dir" value="lib"/>
+
+  <!-- Ivy -->
+
+  <condition property="ivy.jar.exists">
+    <available file="${ivy.dir}/ivy-${ivy.version}.jar"/>
+  </condition>
+
+  <target name="ivy-download" unless="ivy.jar.exists">
+    <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"
+         dest="${ivy.dir}/ivy-${ivy.version}.jar" 
+         usetimestamp="true"/>
+  </target>
+
+  <target name="ivy-init" depends="ivy-download" unless="skip.ivy" description="initialize ivy">
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.dir}" includes="ivy-${ivy.version}.jar"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    <ivy:settings file="${ivy.dir}/ivysettings.xml"/>
+  </target>
+
+  <target name="ivy-clean-libs" depends="ivy-init" description="clean up ivy libs">
+    <delete includeemptydirs="true" quiet="true">
+      <fileset dir=".">
+        <include name="**/lib/ivy/**/*"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="ivy-report" depends="ivy-init" description="generate Ivy reports for all confs">
+    <ivy:resolve conf="*" log="download-only"/>
+    <ivy:report conf="*" todir="${build.dir}/ivy-report"/>
+  </target>
+
+  <macrodef name="ivy-resolve-conf">
+    <attribute name="conf"/>
+    <attribute name="lib.dir"/>
+    <attribute name="report.dir"/>
+    <sequential>
+      <echo>Resolving ivy conf: @{conf} for lib.dir: @{lib.dir} in module ${ant.project.name}</echo>
+    </sequential>
+  </macrodef>
+
+  <target name="ivy-resolve" depends="ivy-init" description="fetch dependencies with ivy">
+    <ivy:resolve conf="*" log="download-only"/>
+    <ivy:report conf="*" todir="ivy-report"/>
+    <ivy:retrieve conf="*" pattern="lib/ivy/[conf]/[artifact]-[revision](-[classifier]).[ext]"/>
+  </target>
+
+</project>
