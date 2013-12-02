@@ -4,10 +4,22 @@
   <info organisation="org.apache.kafka" module="kafka-ivy-test" revision="0.0"/>
 
   <configurations defaultconfmapping="default->default">
-    <conf name="default"/>
+    <conf name="scala-2.8.0"/>
+    <conf name="scala-2.8.2"/>
+    <conf name="scala-2.9.1"/>
+    <conf name="scala-2.9.2"/>
+    <conf name="scala-2.10"/>
   </configurations>
 
   <dependencies>
-    <dependency org="org.apache.kafka" name="kafka_2.8.0" rev="0.8.0"/>
+    <dependency org="org.apache.kafka" name="kafka_2.8.0" rev="0.8.0" conf="scala-2.8.0->default"/>
+    <dependency org="org.apache.kafka" name="kafka_2.8.2" rev="0.8.0" conf="scala-2.8.2->default"/>
+    <dependency org="org.apache.kafka" name="kafka_2.9.1" rev="0.8.0" conf="scala-2.9.1->default"/>
+    <dependency org="org.apache.kafka" name="kafka_2.9.2" rev="0.8.0" conf="scala-2.9.2->default"/>
+    <dependency org="org.apache.kafka" name="kafka_2.10" rev="0.8.0" conf="scala-2.10->default"/>
+
+    <exclude org="com.sun.jdmk"/>
+    <exclude org="com.sun.jmx"/>
+    <exclude org="javax.jms"/>
   </dependencies>
 </ivy-module>

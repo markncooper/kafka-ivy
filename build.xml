@@ -40,15 +40,6 @@
     <ivy:report conf="*" todir="${build.dir}/ivy-report"/>
   </target>
 
-  <macrodef name="ivy-resolve-conf">
-    <attribute name="conf"/>
-    <attribute name="lib.dir"/>
-    <attribute name="report.dir"/>
-    <sequential>
-      <echo>Resolving ivy conf: @{conf} for lib.dir: @{lib.dir} in module ${ant.project.name}</echo>
-    </sequential>
-  </macrodef>
-
   <target name="ivy-resolve" depends="ivy-init" description="fetch dependencies with ivy">
     <ivy:resolve conf="*" log="download-only"/>
     <ivy:report conf="*" todir="ivy-report"/>
